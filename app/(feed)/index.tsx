@@ -1,7 +1,8 @@
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { useTabNavigation } from "./_layout";
+import { MessageCircle, Share2, ThumbsUp } from "lucide-react-native";
 import React from "react";
 import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { useTabNavigation } from "./_layout";
 
 type PostType = "text" | "image" | "video" | "video-only";
 
@@ -169,20 +170,22 @@ export default function Feed() {
 							<View style={styles.actionsRow}>
 								<TouchableOpacity style={styles.actionButton}>
 									<Text style={styles.actionIcon}>
-										<Ionicons name="heart-outline" size={28} color={"#444"} />
+										<ThumbsUp color={"#444"} size={18} />
+										{/* <Ionicons name="thumbs-up-sharp" size={28} color={"#444"} /> */}
 									</Text>
 									<Text style={styles.actionText}>{post.likes}</Text>
 								</TouchableOpacity>
 								<TouchableOpacity style={styles.actionButton}>
 									<Text style={styles.actionIcon}>
-										<Ionicons name="chatbox-outline" size={28} color={"#444"} />
+										<MessageCircle color={"#444"} size={18} />
 									</Text>
 									<Text style={styles.actionText}>{post.comments}</Text>
 								</TouchableOpacity>
 								<TouchableOpacity style={styles.actionButton}>
 									<Text style={styles.actionIcon}>
-										<Ionicons name="share-social" size={28} color={"#444"} />
+										<Share2 color={"#444"} size={18} />
 									</Text>
+									<Text style={styles.actionText}>2</Text>
 								</TouchableOpacity>
 							</View>
 						</View>
