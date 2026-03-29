@@ -60,7 +60,7 @@ export default function CreatePostScreen() {
 				},
 				{ text: "Cancel", style: "cancel" },
 			],
-			{ cancelable: true }
+			{ cancelable: true },
 		);
 	};
 
@@ -70,11 +70,9 @@ export default function CreatePostScreen() {
 
 	const handlePost = () => {
 		if (!canPost) {
-			Alert.alert(
-				"Missing Content",
-				"Please add some text or attach at least one image to your post.",
-				[{ text: "OK" }]
-			);
+			Alert.alert("Missing Content", "Please add some text or attach at least one image to your post.", [
+				{ text: "OK" },
+			]);
 			return;
 		}
 
@@ -89,29 +87,18 @@ export default function CreatePostScreen() {
 	};
 
 	return (
-		<KeyboardAvoidingView
-			style={styles.container}
-			behavior={Platform.OS === "ios" ? "padding" : "height"}
-		>
+		<KeyboardAvoidingView style={styles.container} behavior={Platform.OS === "ios" ? "padding" : "height"}>
 			<View style={styles.header}>
 				<TouchableOpacity style={styles.closeButton}>
 					<Ionicons name="close" size={28} color="#111827" />
 				</TouchableOpacity>
 				<Text style={styles.headerTitle}>Create Post</Text>
 				<TouchableOpacity
-					style={[
-						styles.postButton,
-						canPost ? styles.postButtonActive : styles.postButtonInactive,
-					]}
+					style={[styles.postButton, canPost ? styles.postButtonActive : styles.postButtonInactive]}
 					onPress={handlePost}
 					disabled={!canPost || isPosting}
 				>
-					<Text
-						style={[
-							styles.postButtonText,
-							canPost ? styles.postButtonTextActive : styles.postButtonTextInactive,
-						]}
-					>
+					<Text style={[styles.postButtonText, canPost ? styles.postButtonTextActive : styles.postButtonTextInactive]}>
 						{isPosting ? "Posting..." : "Post"}
 					</Text>
 				</TouchableOpacity>
@@ -123,10 +110,7 @@ export default function CreatePostScreen() {
 				keyboardShouldPersistTaps="handled"
 			>
 				<View style={styles.userRow}>
-					<Image
-						source={{ uri: "https://i.pravatar.cc/150?img=20" }}
-						style={styles.userAvatar}
-					/>
+					<Image source={{ uri: "https://i.pravatar.cc/150?img=20" }} style={styles.userAvatar} />
 					<View>
 						<Text style={styles.userName}>Alex Johnson</Text>
 						<View style={styles.privacyRow}>
@@ -155,18 +139,9 @@ export default function CreatePostScreen() {
 				{images.length > 0 && (
 					<View style={styles.imagesContainer}>
 						{images.map((image, index) => (
-							<View
-								key={image.id}
-								style={[
-									styles.imageWrapper,
-									images.length === 1 && styles.singleImageWrapper,
-								]}
-							>
+							<View key={image.id} style={[styles.imageWrapper, images.length === 1 && styles.singleImageWrapper]}>
 								<Image source={{ uri: image.uri }} style={styles.selectedImage} />
-								<TouchableOpacity
-									style={styles.removeImageButton}
-									onPress={() => handleRemoveImage(image.id)}
-								>
+								<TouchableOpacity style={styles.removeImageButton} onPress={() => handleRemoveImage(image.id)}>
 									<Ionicons name="close-circle" size={24} color="#FFFFFF" />
 								</TouchableOpacity>
 								{index === 0 && images.length > 0 && (
@@ -178,57 +153,50 @@ export default function CreatePostScreen() {
 						))}
 					</View>
 				)}
-
-				<View style={styles.addToPostContainer}>
-					<Text style={styles.addToPostText}>Add to your post</Text>
-					<View style={styles.addOptions}>
-						<TouchableOpacity
-							style={[
-								styles.addOptionButton,
-								images.length >= MAX_IMAGES && styles.addOptionDisabled,
-							]}
-							onPress={handleAddImage}
-							disabled={images.length >= MAX_IMAGES}
-						>
-							<View style={styles.addOptionIcon}>
-								<Ionicons name="images-outline" size={24} color="#3B82F6" />
-							</View>
-							<Text style={styles.addOptionLabel}>Photo</Text>
-							<Text style={styles.imageCount}>
-								{images.length}/{MAX_IMAGES}
-							</Text>
-						</TouchableOpacity>
-
-						<TouchableOpacity style={styles.addOptionButton}>
-							<View style={styles.addOptionIcon}>
-								<Ionicons name="videocam-outline" size={24} color="#10B981" />
-							</View>
-							<Text style={styles.addOptionLabel}>Video</Text>
-						</TouchableOpacity>
-
-						<TouchableOpacity style={styles.addOptionButton}>
-							<View style={styles.addOptionIcon}>
-								<Ionicons name="location-outline" size={24} color="#EF4444" />
-							</View>
-							<Text style={styles.addOptionLabel}>Location</Text>
-						</TouchableOpacity>
-
-						<TouchableOpacity style={styles.addOptionButton}>
-							<View style={styles.addOptionIcon}>
-								<Ionicons name="happy-outline" size={24} color="#F59E0B" />
-							</View>
-							<Text style={styles.addOptionLabel}>Feeling</Text>
-						</TouchableOpacity>
-					</View>
-				</View>
 			</ScrollView>
+			<View style={styles.addToPostContainer}>
+				<Text style={styles.addToPostText}>Add to your post</Text>
+				<View style={styles.addOptions}>
+					<TouchableOpacity
+						style={[styles.addOptionButton, images.length >= MAX_IMAGES && styles.addOptionDisabled]}
+						onPress={handleAddImage}
+						disabled={images.length >= MAX_IMAGES}
+					>
+						<View style={styles.addOptionIcon}>
+							<Ionicons name="images-outline" size={24} color="#3B82F6" />
+						</View>
+						<Text style={styles.addOptionLabel}>Photo</Text>
+						<Text style={styles.imageCount}>
+							{images.length}/{MAX_IMAGES}
+						</Text>
+					</TouchableOpacity>
 
+					<TouchableOpacity style={styles.addOptionButton}>
+						<View style={styles.addOptionIcon}>
+							<Ionicons name="videocam-outline" size={24} color="#10B981" />
+						</View>
+						<Text style={styles.addOptionLabel}>Video</Text>
+					</TouchableOpacity>
+
+					<TouchableOpacity style={styles.addOptionButton}>
+						<View style={styles.addOptionIcon}>
+							<Ionicons name="location-outline" size={24} color="#EF4444" />
+						</View>
+						<Text style={styles.addOptionLabel}>Location</Text>
+					</TouchableOpacity>
+
+					<TouchableOpacity style={styles.addOptionButton}>
+						<View style={styles.addOptionIcon}>
+							<Ionicons name="happy-outline" size={24} color="#F59E0B" />
+						</View>
+						<Text style={styles.addOptionLabel}>Feeling</Text>
+					</TouchableOpacity>
+				</View>
+			</View>
 			{!canPost && (
 				<View style={styles.warningBanner}>
 					<Ionicons name="information-circle-outline" size={18} color="#6B7280" />
-					<Text style={styles.warningText}>
-						Add text or images to create a post
-					</Text>
+					<Text style={styles.warningText}>Add text or images to create a post</Text>
 				</View>
 			)}
 		</KeyboardAvoidingView>
@@ -373,8 +341,8 @@ const styles = StyleSheet.create({
 		fontWeight: "500",
 	},
 	addToPostContainer: {
-		marginHorizontal: 16,
-		marginTop: 16,
+		marginHorizontal: 14,
+		marginVertical: 16,
 		padding: 12,
 		backgroundColor: "#F9FAFB",
 		borderRadius: 12,

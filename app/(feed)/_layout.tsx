@@ -1,11 +1,23 @@
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
+import { createMaterialTopTabNavigator, MaterialTopTabNavigationProp } from "@react-navigation/material-top-tabs";
+import { useNavigation } from "@react-navigation/native";
 import HomeScreen from ".";
+import CreatePostScreen from "./create-post";
 import NotificationsScreen from "./notifications";
 import ProfileScreen from "./profile";
-import CreatePostScreen from "./create-post";
 
 const Tab = createMaterialTopTabNavigator();
+
+type TabName = "Home" | "Notifications" | "Profile" | "Create Post";
+type TabParamList = { [K in TabName]: undefined };
+
+export function useTabNavigation() {
+	const navigation = useNavigation<MaterialTopTabNavigationProp<TabParamList>>();
+
+	return (tabName: TabName) => {
+		navigation.jumpTo(tabName);
+	};
+}
 
 export default function FeedLayout() {
 	return (
@@ -13,6 +25,7 @@ export default function FeedLayout() {
 			screenOptions={{
 				tabBarShowLabel: false,
 				swipeEnabled: false,
+				animationEnabled: false,
 			}}
 		>
 			<Tab.Screen
@@ -26,7 +39,9 @@ export default function FeedLayout() {
 				name="Notifications"
 				component={NotificationsScreen}
 				options={{
-					tabBarIcon: ({ color, focused }) => <Ionicons name="notifications" size={28} color={focused ? "#3B82F6" : color} />,
+					tabBarIcon: ({ color, focused }) => (
+						<Ionicons name="notifications" size={28} color={focused ? "#3B82F6" : color} />
+					),
 				}}
 			/>
 			<Tab.Screen
@@ -40,7 +55,9 @@ export default function FeedLayout() {
 				name="Create Post"
 				component={CreatePostScreen}
 				options={{
-					tabBarIcon: ({ color, focused }) => <Ionicons name="add-circle-outline" size={28} color={focused ? "#3B82F6" : color} />,
+					tabBarIcon: ({ color, focused }) => (
+						<Ionicons name="add-circle-outline" size={28} color={focused ? "#3B82F6" : color} />
+					),
 				}}
 			/>
 		</Tab.Navigator>

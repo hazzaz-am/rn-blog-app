@@ -1,5 +1,5 @@
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { useRouter } from "expo-router";
+import { useTabNavigation } from "./_layout";
 import React from "react";
 import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
@@ -135,14 +135,14 @@ function renderPostContent(post: Post) {
 }
 
 export default function Feed() {
-	const router = useRouter();
+	const navigateToTab = useTabNavigation();
 	return (
 		<View style={styles.container}>
 			<ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
 				<View style={styles.createPostContainer}>
 					<View style={styles.createPostRow}>
 						<Image source={{ uri: "https://i.pravatar.cc/150?img=20" }} style={styles.myAvatar} />
-						<TouchableOpacity style={styles.createPostInput} onPress={() => router.push("/(feed)/create-post")}>
+						<TouchableOpacity style={styles.createPostInput} onPress={() => navigateToTab("Create Post")}>
 							<Text style={styles.createPostText}>What&apos;s on your mind?</Text>
 						</TouchableOpacity>
 					</View>
