@@ -1,7 +1,8 @@
-import { Heart, MessageCircle, Share2, MoreHorizontal } from "lucide-react-native";
 import { useRouter } from "expo-router";
+import { Heart, MessageCircle, MoreHorizontal, Share2 } from "lucide-react-native";
 import React from "react";
 import { Image, Pressable, ScrollView, Text, TouchableOpacity, View } from "react-native";
+import { SheetManager } from "react-native-actions-sheet";
 
 const TEXT_PRIMARY = "#1A1A1A";
 
@@ -30,7 +31,8 @@ const posts: Post[] = [
 		timestamp: "2h ago",
 		postType: "image",
 		image: "https://picsum.photos/400/400?random=1",
-		caption: "Capturing the quiet moments in the city. The light today was absolutely perfect for some architectural shots. 🏛️",
+		caption:
+			"Capturing the quiet moments in the city. The light today was absolutely perfect for some architectural shots. 🏛️",
 		likes: 1200,
 		comments: 84,
 	},
@@ -57,7 +59,8 @@ const posts: Post[] = [
 		location: "London, UK",
 		timestamp: "8h ago",
 		postType: "text",
-		caption: '"Good design is as little design as possible." - Dieter Rams. Today I\'m reflecting on how this applies not just to objects, but to our digital interactions and lives. 🌿',
+		caption:
+			'"Good design is as little design as possible." - Dieter Rams. Today I\'m reflecting on how this applies not just to objects, but to our digital interactions and lives. 🌿',
 		likes: 2500,
 		comments: 156,
 	},
@@ -90,10 +93,14 @@ function ImagePost({ post }: { post: Post }) {
 					<Image source={{ uri: post.avatar }} className="w-10 h-10 rounded-full border border-gray-100" />
 					<View>
 						<Text className="font-bold text-[15px] text-[#1A1A1A]">{post.username}</Text>
-						<Text className="text-[12px] text-[#666666]">{post.location} • {post.timestamp}</Text>
+						<Text className="text-[12px] text-[#666666]">
+							{post.location} • {post.timestamp}
+						</Text>
 					</View>
 				</View>
-				<MoreHorizontal size={20} color="#9CA3AF" />
+				<Pressable onPress={() => SheetManager.show("post-options")}>
+					<MoreHorizontal size={20} color="#9CA3AF" />
+				</Pressable>
 			</View>
 			<View className="px-4 mb-3">
 				<Text className="text-[15px] text-[#1A1A1A] leading-relaxed">{post.caption}</Text>
@@ -116,7 +123,9 @@ function CarouselPost({ post }: { post: Post }) {
 					<Image source={{ uri: post.avatar }} className="w-10 h-10 rounded-full border border-gray-100" />
 					<View>
 						<Text className="font-bold text-[15px] text-[#1A1A1A]">{post.username}</Text>
-						<Text className="text-[12px] text-[#666666]">{post.location} • {post.timestamp}</Text>
+						<Text className="text-[12px] text-[#666666]">
+							{post.location} • {post.timestamp}
+						</Text>
 					</View>
 				</View>
 				<MoreHorizontal size={20} color="#9CA3AF" />
@@ -161,9 +170,14 @@ function TextPost({ post }: { post: Post }) {
 					<Image source={{ uri: post.avatar }} className="w-10 h-10 rounded-full border border-gray-100" />
 					<View>
 						<Text className="font-bold text-[15px] text-[#1A1A1A]">{post.username}</Text>
-						<Text className="text-[12px] text-[#666666]">{post.location} • {post.timestamp}</Text>
+						<Text className="text-[12px] text-[#666666]">
+							{post.location} • {post.timestamp}
+						</Text>
 					</View>
 				</View>
+				<Pressable onPress={() => SheetManager.show("post-options")}>
+					<MoreHorizontal size={20} color="#9CA3AF" />
+				</Pressable>
 			</View>
 			<Text className="text-lg font-medium text-[#1A1A1A] leading-snug">{post.caption}</Text>
 			<View className="flex-row items-center gap-6 mt-6">
