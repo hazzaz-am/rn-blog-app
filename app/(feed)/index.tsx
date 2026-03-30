@@ -1,10 +1,11 @@
-import Ionicons from "@expo/vector-icons/Ionicons";
-import { MessageCircle, Share2, ThumbsUp } from "lucide-react-native";
+import { Heart, MessageCircle, Share2, MoreHorizontal } from "lucide-react-native";
+import { useRouter } from "expo-router";
 import React from "react";
-import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { useTabNavigation } from "./_layout";
+import { Image, Pressable, ScrollView, Text, TouchableOpacity, View } from "react-native";
 
-type PostType = "text" | "image" | "video" | "video-only";
+const TEXT_PRIMARY = "#1A1A1A";
+
+type PostType = "image" | "carousel" | "text";
 
 interface Post {
 	id: number;
@@ -14,8 +15,8 @@ interface Post {
 	timestamp: string;
 	postType: PostType;
 	image?: string;
-	video?: string;
-	caption?: string;
+	images?: string[];
+	caption: string;
 	likes: number;
 	comments: number;
 }
@@ -23,356 +24,197 @@ interface Post {
 const posts: Post[] = [
 	{
 		id: 1,
-		username: "Sarah Johnson",
+		username: "Elena Rossi",
 		avatar: "https://i.pravatar.cc/150?img=1",
-		location: "San Francisco, CA",
-		timestamp: "4 hours ago",
+		location: "Milan, Italy",
+		timestamp: "2h ago",
 		postType: "image",
-		image: "https://picsum.photos/400/300?random=1",
-		caption: "Beautiful sunset at the beach today! 🌅",
-		likes: 124,
-		comments: 18,
+		image: "https://picsum.photos/400/400?random=1",
+		caption: "Capturing the quiet moments in the city. The light today was absolutely perfect for some architectural shots. 🏛️",
+		likes: 1200,
+		comments: 84,
 	},
 	{
 		id: 2,
-		username: "Mike Chen",
+		username: "Julian Vane",
 		avatar: "https://i.pravatar.cc/150?img=3",
-		location: "New York, NY",
-		timestamp: "3 days ago",
-		postType: "text",
-		caption:
-			"Just reflecting on life and trying to find my purpose. Sometimes you need to step back and appreciate how far you've come. 🚀",
-		likes: 89,
+		location: "Stockholm, Sweden",
+		timestamp: "5h ago",
+		postType: "carousel",
+		images: [
+			"https://picsum.photos/400/500?random=2",
+			"https://picsum.photos/400/500?random=3",
+			"https://picsum.photos/400/500?random=4",
+		],
+		caption: "The Nordic winter workspace setup is finally complete. Minimal, functional, and warm.",
+		likes: 432,
 		comments: 12,
 	},
 	{
 		id: 3,
-		username: "Emma Wilson",
+		username: "Sarah Jenkins",
 		avatar: "https://i.pravatar.cc/150?img=5",
 		location: "London, UK",
-		timestamp: "26 March, 2026",
-		postType: "video",
-		video: "sample-video",
-		caption: "Morning coffee at my favorite spot ☕",
-		likes: 256,
-		comments: 34,
-	},
-	{
-		id: 4,
-		username: "Alex Rivera",
-		avatar: "https://i.pravatar.cc/150?img=8",
-		location: "Tokyo, Japan",
-		timestamp: "1 week ago",
-		postType: "video-only",
-		video: "sample-video",
-		likes: 412,
-		comments: 56,
-	},
-	{
-		id: 5,
-		username: "Jessica Lee",
-		avatar: "https://i.pravatar.cc/150?img=9",
-		location: "Sydney, Australia",
-		timestamp: "2 weeks ago",
-		postType: "image",
-		image: "https://picsum.photos/400/300?random=5",
-		caption: "Perfect day for surfing! 🏄‍♂️",
-		likes: 178,
-		comments: 22,
-	},
-	{
-		id: 6,
-		username: "David Kim",
-		avatar: "https://i.pravatar.cc/150?img=12",
-		location: "Seoul, South Korea",
-		timestamp: "5 hours ago",
+		timestamp: "8h ago",
 		postType: "text",
-		caption: "Good Vibes Only ✨",
-		likes: 67,
-		comments: 8,
+		caption: '"Good design is as little design as possible." - Dieter Rams. Today I\'m reflecting on how this applies not just to objects, but to our digital interactions and lives. 🌿',
+		likes: 2500,
+		comments: 156,
 	},
 ];
 
-function formatTimestamp(timestamp: string): string {
-	return timestamp;
+function PostActions({ likes, comments }: { likes: number; comments: number }) {
+	return (
+		<View className="flex-row items-center gap-6 px-4 pt-4">
+			<TouchableOpacity className="flex-row items-center gap-1.5 active:scale-90">
+				<Heart size={24} color={TEXT_PRIMARY} />
+				<Text className="text-sm font-medium text-[#1A1A1A]">{likes}</Text>
+			</TouchableOpacity>
+			<TouchableOpacity className="flex-row items-center gap-1.5 active:scale-90">
+				<MessageCircle size={24} color={TEXT_PRIMARY} />
+				<Text className="text-sm font-medium text-[#1A1A1A]">{comments}</Text>
+			</TouchableOpacity>
+			<TouchableOpacity className="flex-row items-center gap-1.5 active:scale-90">
+				<Share2 size={24} color={TEXT_PRIMARY} />
+				<Text className="text-sm font-medium text-[#1A1A1A]">Share</Text>
+			</TouchableOpacity>
+		</View>
+	);
 }
 
-function renderPostContent(post: Post) {
-	if (post.postType === "text") {
-		return (
-			<View style={styles.textContent}>
-				<Text style={styles.textPost}>{post.caption}</Text>
-			</View>
-		);
-	}
-
-	if (post.postType === "video") {
-		return (
-			<View style={styles.mediaContainer}>
-				<View style={styles.videoContainer}>
-					<Text style={styles.videoIcon}>▶️</Text>
-					<Text style={styles.videoLabel}>Video</Text>
-				</View>
-			</View>
-		);
-	}
-
-	if (post.postType === "video-only") {
-		return (
-			<View style={styles.mediaContainer}>
-				<View style={styles.videoContainer}>
-					<Text style={styles.videoIcon}>▶️</Text>
-					<Text style={styles.videoLabel}>Video</Text>
-				</View>
-			</View>
-		);
-	}
-
+function ImagePost({ post }: { post: Post }) {
 	return (
-		<View style={styles.mediaContainer}>
-			{post.image && <Image source={{ uri: post.image }} style={styles.postImage} />}
+		<View className="py-4 border-b border-[#F2F2F2]">
+			<View className="flex-row items-center justify-between px-4 mb-3">
+				<View className="flex-row items-center gap-3">
+					<Image source={{ uri: post.avatar }} className="w-10 h-10 rounded-full border border-gray-100" />
+					<View>
+						<Text className="font-bold text-[15px] text-[#1A1A1A]">{post.username}</Text>
+						<Text className="text-[12px] text-[#666666]">{post.location} • {post.timestamp}</Text>
+					</View>
+				</View>
+				<MoreHorizontal size={20} color="#9CA3AF" />
+			</View>
+			<View className="px-4 mb-3">
+				<Text className="text-[15px] text-[#1A1A1A] leading-relaxed">{post.caption}</Text>
+			</View>
+			{post.image && (
+				<View className="w-full aspect-square">
+					<Image source={{ uri: post.image }} className="w-full h-full" />
+				</View>
+			)}
+			<PostActions likes={post.likes} comments={post.comments} />
+		</View>
+	);
+}
+
+function CarouselPost({ post }: { post: Post }) {
+	return (
+		<View className="py-4 border-b border-[#F2F2F2]">
+			<View className="flex-row items-center justify-between px-4 mb-3">
+				<View className="flex-row items-center gap-3">
+					<Image source={{ uri: post.avatar }} className="w-10 h-10 rounded-full border border-gray-100" />
+					<View>
+						<Text className="font-bold text-[15px] text-[#1A1A1A]">{post.username}</Text>
+						<Text className="text-[12px] text-[#666666]">{post.location} • {post.timestamp}</Text>
+					</View>
+				</View>
+				<MoreHorizontal size={20} color="#9CA3AF" />
+			</View>
+			<View className="relative w-full aspect-[4/5]">
+				<Image source={{ uri: post.images?.[0] }} className="w-full h-full" />
+				<View className="absolute top-3 right-3 bg-black/50 backdrop-blur-md px-2.5 py-1 rounded-full">
+					<Text className="text-[10px] text-white font-bold">1 / {post.images?.length}</Text>
+				</View>
+				<View className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-1.5">
+					<View className="w-1.5 h-1.5 rounded-full bg-white" />
+					<View className="w-1.5 h-1.5 rounded-full bg-white/40" />
+					<View className="w-1.5 h-1.5 rounded-full bg-white/40" />
+				</View>
+			</View>
+			<View className="px-4 mt-3 mb-3">
+				<Text className="text-[15px] text-[#1A1A1A] leading-relaxed">{post.caption}</Text>
+			</View>
+			<View className="flex-row items-center gap-6 px-4 pt-2">
+				<TouchableOpacity className="flex-row items-center gap-1.5 active:scale-90">
+					<Heart size={24} color={TEXT_PRIMARY} />
+					<Text className="text-sm font-medium text-[#1A1A1A]">{post.likes}</Text>
+				</TouchableOpacity>
+				<TouchableOpacity className="flex-row items-center gap-1.5 active:scale-90">
+					<MessageCircle size={24} color={TEXT_PRIMARY} />
+					<Text className="text-sm font-medium text-[#1A1A1A]">{post.comments}</Text>
+				</TouchableOpacity>
+				<TouchableOpacity className="flex-row items-center gap-1.5 active:scale-90">
+					<Share2 size={24} color={TEXT_PRIMARY} />
+					<Text className="text-sm font-medium text-[#1A1A1A]">Share</Text>
+				</TouchableOpacity>
+			</View>
+		</View>
+	);
+}
+
+function TextPost({ post }: { post: Post }) {
+	return (
+		<View className="py-6 px-4 border-b border-[#F2F2F2]">
+			<View className="flex-row items-center justify-between mb-4">
+				<View className="flex-row items-center gap-3">
+					<Image source={{ uri: post.avatar }} className="w-10 h-10 rounded-full border border-gray-100" />
+					<View>
+						<Text className="font-bold text-[15px] text-[#1A1A1A]">{post.username}</Text>
+						<Text className="text-[12px] text-[#666666]">{post.location} • {post.timestamp}</Text>
+					</View>
+				</View>
+			</View>
+			<Text className="text-lg font-medium text-[#1A1A1A] leading-snug">{post.caption}</Text>
+			<View className="flex-row items-center gap-6 mt-6">
+				<TouchableOpacity className="flex-row items-center gap-1.5 active:scale-90">
+					<Heart size={24} color={TEXT_PRIMARY} />
+					<Text className="text-sm font-medium text-[#1A1A1A]">{post.likes}</Text>
+				</TouchableOpacity>
+				<TouchableOpacity className="flex-row items-center gap-1.5 active:scale-90">
+					<MessageCircle size={24} color={TEXT_PRIMARY} />
+					<Text className="text-sm font-medium text-[#1A1A1A]">{post.comments}</Text>
+				</TouchableOpacity>
+				<TouchableOpacity className="flex-row items-center gap-1.5 active:scale-90">
+					<Share2 size={24} color={TEXT_PRIMARY} />
+					<Text className="text-sm font-medium text-[#1A1A1A]">Share</Text>
+				</TouchableOpacity>
+			</View>
 		</View>
 	);
 }
 
 export default function Feed() {
-	const navigateToTab = useTabNavigation();
+	const router = useRouter();
+
 	return (
-		<View style={styles.container}>
-			<ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
-				<View style={styles.createPostContainer}>
-					<View style={styles.createPostRow}>
-						<Image source={{ uri: "https://i.pravatar.cc/150?img=20" }} style={styles.myAvatar} />
-						<TouchableOpacity style={styles.createPostInput} onPress={() => navigateToTab("Create Post")}>
-							<Text style={styles.createPostText}>What&apos;s on your mind?</Text>
-						</TouchableOpacity>
+		<View className="flex-1 bg-white">
+			<View className="flex-row items-center justify-between px-4 pt-10 pb-4 bg-white border-b border-[#F2F2F2]">
+				<View className="flex-row items-center gap-2">
+					<View className="w-8 h-8 bg-[#007AFF] rounded-lg items-center justify-center">
+						<Text className="text-white font-bold text-xl">S</Text>
 					</View>
+					<Text className="font-bold text-lg tracking-tight">Feed</Text>
 				</View>
-				{posts.map((post) => (
-					<View key={post.id} style={styles.postCard}>
-						<View style={styles.postHeader}>
-							<Image source={{ uri: post.avatar }} style={styles.avatar} />
-							<View style={styles.postInfo}>
-								<Text style={styles.username}>{post.username}</Text>
-								<View style={styles.locationRow}>
-									<Text style={styles.locationIcon}>
-										<Ionicons name="location-outline" size={12} color={"#444"} />
-									</Text>
-									<Text style={styles.location}>{post.location}</Text>
-								</View>
-							</View>
-							<Text style={styles.timestamp}>{formatTimestamp(post.timestamp)}</Text>
-						</View>
+				<Pressable
+					className="bg-[#007AFF] px-4 py-1.5 rounded-full active:scale-95"
+					onPress={() => router.push("/(feed)/create")}
+				>
+					<Text className="text-white text-sm font-semibold">New Post</Text>
+				</Pressable>
+			</View>
 
-						{renderPostContent(post)}
-
-						<View style={styles.postFooter}>
-							<View style={styles.actionsRow}>
-								<TouchableOpacity style={styles.actionButton}>
-									<Text style={styles.actionIcon}>
-										<ThumbsUp color={"#444"} size={18} />
-										{/* <Ionicons name="thumbs-up-sharp" size={28} color={"#444"} /> */}
-									</Text>
-									<Text style={styles.actionText}>{post.likes}</Text>
-								</TouchableOpacity>
-								<TouchableOpacity style={styles.actionButton}>
-									<Text style={styles.actionIcon}>
-										<MessageCircle color={"#444"} size={18} />
-									</Text>
-									<Text style={styles.actionText}>{post.comments}</Text>
-								</TouchableOpacity>
-								<TouchableOpacity style={styles.actionButton}>
-									<Text style={styles.actionIcon}>
-										<Share2 color={"#444"} size={18} />
-									</Text>
-									<Text style={styles.actionText}>2</Text>
-								</TouchableOpacity>
-							</View>
-						</View>
-					</View>
-				))}
+			<ScrollView showsVerticalScrollIndicator={false} className="flex-1">
+				{posts.map((post) => {
+					if (post.postType === "carousel") {
+						return <CarouselPost key={post.id} post={post} />;
+					}
+					if (post.postType === "text") {
+						return <TextPost key={post.id} post={post} />;
+					}
+					return <ImagePost key={post.id} post={post} />;
+				})}
 			</ScrollView>
 		</View>
 	);
 }
-
-const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-		backgroundColor: "#F3F4F6",
-	},
-	createPostContainer: {
-		backgroundColor: "#FFFFFF",
-		paddingHorizontal: 16,
-		paddingTop: 16,
-		paddingBottom: 12,
-		borderBottomWidth: 1,
-		borderBottomColor: "#E5E7EB",
-	},
-	createPostRow: {
-		flexDirection: "row",
-		alignItems: "center",
-	},
-	myAvatar: {
-		width: 40,
-		height: 40,
-		borderRadius: 20,
-		marginRight: 12,
-	},
-	createPostInput: {
-		flex: 1,
-		backgroundColor: "#F3F4F6",
-		borderRadius: 20,
-		paddingHorizontal: 16,
-		paddingVertical: 10,
-	},
-	createPostText: {
-		fontSize: 15,
-		color: "#6B7280",
-	},
-	createPostActions: {
-		flexDirection: "row",
-		justifyContent: "space-around",
-		borderTopColor: "#F3F4F6",
-		paddingTop: 12,
-	},
-	createPostAction: {
-		flexDirection: "row",
-		alignItems: "center",
-	},
-	actionEmoji: {
-		fontSize: 18,
-		marginRight: 6,
-	},
-	actionLabel: {
-		fontSize: 13,
-		color: "#6B7280",
-		fontWeight: "500",
-	},
-	header: {
-		flexDirection: "row",
-		justifyContent: "space-between",
-		alignItems: "center",
-		paddingHorizontal: 16,
-		paddingTop: 60,
-		paddingBottom: 16,
-		borderBottomWidth: 1,
-		borderBottomColor: "#E5E7EB",
-		backgroundColor: "#FFFFFF",
-	},
-	headerTitle: {
-		fontSize: 28,
-		fontWeight: "700",
-		color: "#111827",
-	},
-	headerIcon: {
-		fontSize: 24,
-	},
-	scrollView: {
-		flex: 1,
-	},
-	postCard: {
-		marginBottom: 20,
-		backgroundColor: "#FFFFFF",
-	},
-	postHeader: {
-		flexDirection: "row",
-		alignItems: "center",
-		paddingHorizontal: 16,
-		paddingVertical: 12,
-	},
-	avatar: {
-		width: 44,
-		height: 44,
-		borderRadius: 22,
-		marginRight: 12,
-	},
-	postInfo: {
-		flex: 1,
-	},
-	username: {
-		fontSize: 15,
-		fontWeight: "600",
-		color: "#111827",
-		marginBottom: 2,
-	},
-	locationRow: {
-		flexDirection: "row",
-		alignItems: "center",
-	},
-	locationIcon: {
-		marginRight: 4,
-		marginTop: 1.5,
-	},
-	location: {
-		fontSize: 13,
-		color: "#6B7280",
-	},
-	timestamp: {
-		fontSize: 12,
-		color: "#9CA3AF",
-	},
-	mediaContainer: {
-		width: "100%",
-	},
-	postImage: {
-		width: "100%",
-		height: 350,
-		backgroundColor: "#F3F4F6",
-	},
-	textContent: {
-		paddingHorizontal: 16,
-		paddingVertical: 12,
-	},
-	textPost: {
-		fontSize: 16,
-		color: "#111827",
-		lineHeight: 24,
-	},
-	videoContainer: {
-		width: "100%",
-		height: 300,
-		backgroundColor: "#1F2937",
-		justifyContent: "center",
-		alignItems: "center",
-	},
-	videoIcon: {
-		fontSize: 48,
-		marginBottom: 8,
-	},
-	videoLabel: {
-		fontSize: 14,
-		color: "#FFFFFF",
-		fontWeight: "500",
-	},
-	postFooter: {
-		paddingHorizontal: 16,
-		paddingVertical: 12,
-	},
-	actionsRow: {
-		flexDirection: "row",
-		marginBottom: 10,
-	},
-	actionButton: {
-		flexDirection: "row",
-		alignItems: "center",
-		marginRight: 20,
-	},
-	actionIcon: {
-		fontSize: 20,
-		marginRight: 6,
-	},
-	actionText: {
-		fontSize: 14,
-		color: "#374151",
-		fontWeight: "500",
-	},
-	caption: {
-		fontSize: 14,
-		color: "#374151",
-		lineHeight: 20,
-	},
-	captionUsername: {
-		fontWeight: "600",
-	},
-});

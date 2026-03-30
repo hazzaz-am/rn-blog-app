@@ -1,65 +1,115 @@
-import Ionicons from "@expo/vector-icons/Ionicons";
-import { createMaterialTopTabNavigator, MaterialTopTabNavigationProp } from "@react-navigation/material-top-tabs";
-import { useNavigation } from "@react-navigation/native";
-import HomeScreen from ".";
-import CreatePostScreen from "./create-post";
-import NotificationsScreen from "./notifications";
-import ProfileScreen from "./profile";
+import { Tabs } from "expo-router";
+import { Bell, House, Search, User } from "lucide-react-native";
+import { StyleSheet, Text, View } from "react-native";
 
-const Tab = createMaterialTopTabNavigator();
+const BRAND_ACCENT = "#007AFF";
 
-type TabName = "Home" | "Notifications" | "Profile" | "Create Post";
-type TabParamList = { [K in TabName]: undefined };
-
-export function useTabNavigation() {
-	const navigation = useNavigation<MaterialTopTabNavigationProp<TabParamList>>();
-
-	return (tabName: TabName) => {
-		navigation.jumpTo(tabName);
-	};
+function TabIcon({ icon, label, focused }: { icon: React.ReactNode; label: string; focused: boolean }) {
+	return (
+		<View style={styles.tabItem}>
+			{icon}
+			<Text style={[styles.tabLabel, focused && styles.tabLabelActive]}>{label}</Text>
+		</View>
+	);
 }
 
 export default function FeedLayout() {
 	return (
-		<Tab.Navigator
+		<Tabs
 			screenOptions={{
+				animation: "shift",
+				headerShown: false,
+				tabBarItemStyle: {
+					paddingVertical: 20,
+				},
+				tabBarStyle: styles.tabBar,
 				tabBarShowLabel: false,
-				swipeEnabled: false,
-				animationEnabled: false,
 			}}
 		>
-			<Tab.Screen
-				name="Home"
-				component={HomeScreen}
+			<Tabs.Screen
+				name="index"
 				options={{
-					tabBarIcon: ({ color, focused }) => <Ionicons name="home" size={28} color={focused ? "#3B82F6" : color} />,
-				}}
-			/>
-			<Tab.Screen
-				name="Notifications"
-				component={NotificationsScreen}
-				options={{
-					tabBarIcon: ({ color, focused }) => (
-						<Ionicons name="notifications" size={28} color={focused ? "#3B82F6" : color} />
+					tabBarIcon: ({ focused }) => (
+						<TabIcon
+							icon={<House size={24} color={focused ? BRAND_ACCENT : "#9CA3AF"} />}
+							label="Home"
+							focused={focused}
+						/>
 					),
 				}}
 			/>
-			<Tab.Screen
-				name="Profile"
-				component={ProfileScreen}
+			<Tabs.Screen
+				name="explore"
 				options={{
-					tabBarIcon: ({ color, focused }) => <Ionicons name="person" size={28} color={focused ? "#3B82F6" : color} />,
-				}}
-			/>
-			<Tab.Screen
-				name="Create Post"
-				component={CreatePostScreen}
-				options={{
-					tabBarIcon: ({ color, focused }) => (
-						<Ionicons name="add-circle-outline" size={28} color={focused ? "#3B82F6" : color} />
+					tabBarIcon: ({ focused }) => (
+						<TabIcon
+							icon={<Search size={24} color={focused ? BRAND_ACCENT : "#9CA3AF"} />}
+							label="Explore"
+							focused={focused}
+						/>
 					),
 				}}
 			/>
-		</Tab.Navigator>
+			<Tabs.Screen
+				name="notifications"
+				options={{
+					tabBarIcon: ({ focused }) => (
+						<TabIcon
+							icon={<Bell size={24} color={focused ? BRAND_ACCENT : "#9CA3AF"} />}
+							label="Alerts"
+							focused={focused}
+						/>
+					),
+				}}
+			/>
+			<Tabs.Screen
+				name="profile"
+				options={{
+					tabBarIcon: ({ focused }) => (
+						<TabIcon
+							icon={<User size={24} color={focused ? BRAND_ACCENT : "#9CA3AF"} />}
+							label="Profile"
+							focused={focused}
+						/>
+					),
+				}}
+			/>
+			<Tabs.Screen
+				name="create"
+				options={{
+					href: null,
+				}}
+			/>
+		</Tabs>
 	);
 }
+
+const styles = StyleSheet.create({
+	tabBar: {
+		height: 84,
+		backgroundColor: "#FFFFFF",
+		borderTopWidth: 1,
+		borderTopColor: "#F2F2F2",
+
+		borderRadius: 50,
+		overflow: "hidden",
+		marginHorizontal: 20,
+		marginBottom: 20,
+		paddingBottom: 0,
+		paddingTop: 0,
+		position: "absolute",
+	},
+	tabItem: {
+		alignItems: "center",
+		justifyContent: "center",
+	},
+	tabLabel: {
+		fontSize: 10,
+		fontWeight: "700",
+		color: "#9CA3AF",
+		marginTop: 4,
+	},
+	tabLabelActive: {
+		color: BRAND_ACCENT,
+	},
+});
