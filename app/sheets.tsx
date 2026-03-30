@@ -9,6 +9,6 @@ declare module "react-native-actions-sheet" {
 	}
 }
 
-export const Sheets = () => {
+export default function Sheets ()  {
 	return <SheetRegister sheets={{ "post-options": PostOptions }} />;
 };

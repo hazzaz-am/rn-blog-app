@@ -212,7 +212,7 @@ export default function Feed() {
 				</View>
 				<Pressable
 					className="bg-[#007AFF] px-4 py-1.5 rounded-full active:scale-95"
-					onPress={() => router.push("/(feed)/create")}
+					onPress={() => router.push("/create")}
 				>
 					<Text className="text-white text-sm font-semibold">New Post</Text>
 				</Pressable>

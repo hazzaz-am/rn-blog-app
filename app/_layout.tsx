@@ -4,7 +4,7 @@ import { SheetProvider } from "react-native-actions-sheet";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
 import "./global.css";
-import { Sheets } from "./sheets";
+import Sheets from "./sheets";
 
 export default function RootLayout() {
 	return (
@@ -18,7 +18,13 @@ export default function RootLayout() {
 						}}
 					>
 						<Stack.Screen
-							name="(feed)/create"
+							name="(feed)"
+							options={{
+								headerShown: false,
+							}}
+						/>
+						<Stack.Screen
+							name="create"
 							options={{
 								presentation: "modal",
 								animation: "slide_from_bottom",

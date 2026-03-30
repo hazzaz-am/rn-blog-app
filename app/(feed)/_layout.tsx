@@ -74,12 +74,6 @@ export default function FeedLayout() {
 					),
 				}}
 			/>
-			<Tabs.Screen
-				name="create"
-				options={{
-					href: null,
-				}}
-			/>
 		</Tabs>
 	);
 }
@@ -90,7 +84,6 @@ const styles = StyleSheet.create({
 		backgroundColor: "#FFFFFF",
 		borderTopWidth: 1,
 		borderTopColor: "#F2F2F2",
-
 		borderRadius: 50,
 		overflow: "hidden",
 		marginHorizontal: 20,
