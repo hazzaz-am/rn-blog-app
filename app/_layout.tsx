@@ -31,7 +31,7 @@ export default function RootLayout() {
 							}}
 						/>
 					</Stack>
-					<StatusBar style="dark" />
+					<StatusBar style="light" />
 				</SafeAreaView>
 			</GestureHandlerRootView>
 		</SheetProvider>
