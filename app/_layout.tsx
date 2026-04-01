@@ -17,8 +17,14 @@ export default function RootLayout() {
 							headerShown: false,
 						}}
 					>
-						<Stack.Screen
+						{/* <Stack.Screen
 							name="(feed)"
+							options={{
+								headerShown: false,
+							}}
+						/> */}
+						<Stack.Screen
+							name="(auth)"
 							options={{
 								headerShown: false,
 							}}

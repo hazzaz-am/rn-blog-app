@@ -6,9 +6,10 @@ interface ButtonProps {
   onPress: () => void;
   variant?: 'primary' | 'secondary' | 'outline';
   style?: ViewStyle;
+  disabled?: boolean;
 }
 
-export default function Button({ title, onPress, variant = 'primary', style }: ButtonProps) {
+export default function Button({ title, onPress, variant = 'primary', style, disabled }: ButtonProps) {
   return (
     <TouchableOpacity 
       style={[
@@ -19,6 +20,7 @@ export default function Button({ title, onPress, variant = 'primary', style }: B
         style
       ]} 
       onPress={onPress}
+      disabled={disabled}
     >
       <Text style={[
         styles.text,
