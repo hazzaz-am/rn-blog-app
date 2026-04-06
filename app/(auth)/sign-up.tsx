@@ -48,7 +48,7 @@ export default function SignUp() {
 					value={email}
 					onChangeText={setEmail}
 					keyboardType="email-address"
-          autoCapitalize="none"
+					autoCapitalize="none"
 				/>
 
 				<Input
