@@ -18,20 +18,22 @@ type AuthState = {
 	setUser: (user: AuthUser | null) => void;
 	setStatus: (status: AuthStatus) => void;
 	setError: (error: string | null) => void;
+	setLastSyncedAt: (timestamp: number | null) => void;
 	reset: () => void;
 };
 
 export const useAuthStore = create<AuthState>()(
-	devtools(
-		immer((set) => ({
+	(__DEV__ ? devtools : (fn: any) => fn)(
+		immer<AuthState>((set) => ({
 			user: null,
 			status: "checking",
 			error: null,
 			lastSyncedAt: null,
 
-			setUser: (user) => set({ user }),
-			setStatus: (status) => set({ status }),
-			setError: (error) => set({ error }),
+			setUser: (user: AuthUser | null) => set({ user }),
+			setStatus: (status: AuthStatus) => set({ status }),
+			setError: (error: string | null) => set({ error }),
+			setLastSyncedAt: (timestamp: number | null) => set({ lastSyncedAt: timestamp }),
 
 			reset: () =>
 				set({
